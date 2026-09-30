@@ -1,51 +1,48 @@
-package com.proyecto.ventas_online.domain.model;
+package com.proyecto.ventas_online.infrastructure.model;
 
 import lombok.Data;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.UUID;
 
+@RequiredArgsConstructor
 @Getter
 @ToString
-public class Category {
+public class CategoryEntity {
     private final UUID id;
     private final String name;
 
-    public Category(String name) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-    }
-
-    private Category(CategoryBuild builder){
+    private CategoryEntity(CategoryEntityBuilder builder){
         this.id = builder.id;
         this.name = builder.name;
     }
 
-    public static class CategoryBuild {
+    public static class CategoryEntityBuilder{
         private UUID id;
         private String name;
 
-        public CategoryBuild id(UUID id){
+        public CategoryEntityBuilder id(UUID id){
             this.id = id;
             return this;
         }
 
-        public CategoryBuild name(String name){
+        public CategoryEntityBuilder name(String name){
             this.name = name;
             return this;
         }
 
-        public Category buildNew(){
+        public CategoryEntity buildNew(){
             this.id = UUID.randomUUID();
-            return new Category(this);
+            return new CategoryEntity(this);
         }
 
-        public Category buildExisting(){
+        public CategoryEntity buildExisting(){
             if (id == null){
                 throw new IllegalStateException("id is requerid");
             }
-            return new Category(this);
+            return new CategoryEntity(this);
         }
     }
 }

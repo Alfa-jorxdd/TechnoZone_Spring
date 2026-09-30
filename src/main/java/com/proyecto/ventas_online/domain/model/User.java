@@ -1,27 +1,38 @@
 package com.proyecto.ventas_online.domain.model;
 
+import lombok.Getter;
+import lombok.ToString;
+
 import java.util.UUID;
 
+@Getter
+@ToString
 public class User {
     private final UUID id;
     private final String name;
     private final String lastname;
     private final String email;
-    private final String password;
+    private final String passwordHash;
     private final Role role;
 
-    public User(String name, String lastname, String email, String password, Role role) {
-        this.id = UUID.randomUUID();
+    private User(UUID id, String name, String lastname, String email, String passwordHash, Role role) {
+        this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.email = email;
-        //Deberíamos hashear la contraseña
-        this.password = password;
+        this.passwordHash = passwordHash;
         this.role = role;
     }
 
-    public boolean validateCredential(){
-        //Falta la lógica. Podríamos usar una librería hash
-        return false;
+    //Usuario NUEVO recibe el hash ya calculado
+    public static User create(String name, String lastname, String email,
+                              String passwordHash, Role role) {
+        return new User(UUID.randomUUID(), name, lastname, email, passwordHash, role);
+    }
+
+    //Usuario EXISTENTE lo usa el mapper al leer de persistencia ojito :v
+    public static User reconstitute(UUID id, String name, String lastname,
+                                    String email, String passwordHash, Role role) {
+        return new User(id, name, lastname, email, passwordHash, role);
     }
 }

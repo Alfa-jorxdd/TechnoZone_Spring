@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ProductRepositoryPort {
     Optional<Product> findProductById(UUID id);
-    ProductSaveResponseDTO saveProduct(Product productBySave);
-    void deleteProduct(UUID id);
-    void updateProduct(Product productByUpdate);
+    Product saveProduct(Product productBySave);
+    Product deleteProduct(UUID id);
+    Product updateProduct(Product productByUpdate);
 }

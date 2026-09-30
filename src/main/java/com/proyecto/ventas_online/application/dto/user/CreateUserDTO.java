@@ -1,9 +1,11 @@
 package com.proyecto.ventas_online.application.dto.user;
 
 import com.proyecto.ventas_online.domain.model.Role;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Data
 public class CreateUserDTO {
     private final String name;
     private final String lastname;
