@@ -1,7 +1,8 @@
 package com.proyecto.ventas_online.application.ports.in.user;
 
-import com.proyecto.ventas_online.application.dto.user.UpdateUserDTO;
+import com.proyecto.ventas_online.domain.model.User;
+import com.proyecto.ventas_online.infrastructure.dto.user.UpdateUserCommand;
 
 public interface UpdateUserUseCase {
-    UpdateUserDTO updateUser(UpdateUserDTO userDTO);
+    User updateUser(UpdateUserCommand userDTO);
 }

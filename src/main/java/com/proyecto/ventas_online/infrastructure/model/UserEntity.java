@@ -17,13 +17,4 @@ public class UserEntity {
     private final String email;
     private final String passwordHash;
     private final Role role;
-
-    public UserEntity(String name, String lastname, String email, String passwordHash, Role role) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.lastname = lastname;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.role = role;
-    }
 }

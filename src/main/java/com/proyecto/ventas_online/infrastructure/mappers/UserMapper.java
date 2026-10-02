@@ -1,6 +1,7 @@
 package com.proyecto.ventas_online.infrastructure.mappers;
 
 import com.proyecto.ventas_online.domain.model.User;
+import com.proyecto.ventas_online.infrastructure.dto.user.*;
 import com.proyecto.ventas_online.infrastructure.model.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -8,9 +9,6 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     public User toDomain(UserEntity userEntity){
-        if (userEntity == null){
-            return null;
-        }
         return User.reconstitute(
                 userEntity.getId(),
                 userEntity.getName(),
@@ -21,10 +19,22 @@ public class UserMapper {
         );
     }
 
+    public UpdateUserCommand toCommand(UpdateUserRequest request) {
+        return new UpdateUserCommand(request.id(), request.name(), request.lastname(),
+                request.email(), request.password(), request.role());
+    }
+
+    public UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+
     public UserEntity toEntity(User user){
-        if (user == null){
-            return null;
-        }
         return UserEntity.builder()
                 .id(user.getId())
                 .name(user.getName())
@@ -33,5 +43,15 @@ public class UserMapper {
                 .passwordHash(user.getPasswordHash())
                 .role(user.getRole())
                 .build();
+    }
+
+    public CreateUserCommand toCommand(CreateUserRequest request){
+        return new CreateUserCommand(
+                request.name(),
+                request.lastname(),
+                request.email(),
+                request.password(),
+                request.role()
+        );
     }
 }

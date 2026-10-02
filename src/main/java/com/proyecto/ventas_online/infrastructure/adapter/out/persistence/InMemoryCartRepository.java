@@ -33,9 +33,9 @@ public class InMemoryCartRepository implements CartRepositoryPort {
     }
 
     @Override
-    public Cart deleteCart(UUID id) {
-        CartEntity cartEntityDeleted = repositoryCart.remove(id);
-        return cartMapper.toDomain(cartEntityDeleted);
+    public void deleteCartByUserId(UUID id) {
+        repositoryCart.values()
+                .removeIf(cartEntity -> cartEntity.getIdClient().equals(id));
     }
 
     @Override

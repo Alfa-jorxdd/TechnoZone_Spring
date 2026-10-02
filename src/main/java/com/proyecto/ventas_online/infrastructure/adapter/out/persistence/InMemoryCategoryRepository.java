@@ -7,10 +7,7 @@ import com.proyecto.ventas_online.infrastructure.mappers.CategoryMapper;
 import com.proyecto.ventas_online.infrastructure.model.CategoryEntity;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 public class InMemoryCategoryRepository implements CategoryRepositoryPort {
@@ -30,8 +27,15 @@ public class InMemoryCategoryRepository implements CategoryRepositoryPort {
     }
 
     @Override
-    public void saveCategory(Category category) {
+    public Category saveCategory(Category category) {
         CategoryEntity entityBySave = categoryMapper.toEntity(category);
         repositoryCategory.put(entityBySave.getId(), entityBySave);
+        return categoryMapper.toDomain(entityBySave);
+    }
+
+    @Override
+    public List<Category> getAll() {
+        return repositoryCategory.values().stream()
+                .map(categoryMapper::toDomain).toList();
     }
 }

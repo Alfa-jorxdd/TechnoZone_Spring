@@ -5,5 +5,5 @@ import com.proyecto.ventas_online.domain.model.Cart;
 import java.util.UUID;
 
 public interface CreateCartUseCase {
-    Cart createCart(UUID idClient);
+    Cart createCart();
 }

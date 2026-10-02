@@ -1,6 +1,5 @@
 package com.proyecto.ventas_online.domain.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.ToString;
 

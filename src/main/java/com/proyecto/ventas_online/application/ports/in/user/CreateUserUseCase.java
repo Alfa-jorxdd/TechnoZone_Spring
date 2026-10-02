@@ -1,8 +1,8 @@
 package com.proyecto.ventas_online.application.ports.in.user;
 
-import com.proyecto.ventas_online.application.dto.user.UserSaveResponseDTO;
-import com.proyecto.ventas_online.application.dto.user.CreateUserDTO;
+import com.proyecto.ventas_online.domain.model.User;
+import com.proyecto.ventas_online.infrastructure.dto.user.CreateUserCommand;
 
 public interface CreateUserUseCase {
-    UserSaveResponseDTO createUser(CreateUserDTO userDTO);
+    User createUser(CreateUserCommand command);
 }

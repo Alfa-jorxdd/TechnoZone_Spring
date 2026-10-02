@@ -1,13 +1,11 @@
 package com.proyecto.ventas_online.infrastructure.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Getter
 @ToString
 public class CategoryEntity {

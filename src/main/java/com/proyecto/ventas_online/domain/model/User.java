@@ -12,6 +12,7 @@ public class User {
     private final String name;
     private final String lastname;
     private final String email;
+    @ToString.Exclude
     private final String passwordHash;
     private final Role role;
 

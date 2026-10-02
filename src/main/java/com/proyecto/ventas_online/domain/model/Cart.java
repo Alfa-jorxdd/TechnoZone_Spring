@@ -1,5 +1,6 @@
 package com.proyecto.ventas_online.domain.model;
 
+import com.proyecto.ventas_online.domain.exception.cart.ProductNotInCartException;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -23,9 +24,20 @@ public class Cart {
     }
 
     public void addProduct(UUID idProduct, int quantity, BigDecimal unitPrice){
-        //Aquí podríamos crear un patrón creacional para el CartItem
         CartItem newItem = new CartItem(idProduct, quantity, unitPrice);
         this.items.add(newItem);
+    }
+
+    public void decreaseProduct(UUID idProduct, int amount) {
+        CartItem item = items.stream()
+                .filter(i -> i.getIdProduct().equals(idProduct))
+                .findFirst()
+                .orElseThrow(() -> new ProductNotInCartException(idProduct));
+
+        item.decreaseQuantity(amount);
+        if (item.getQuantity() == 0) {
+            items.remove(item);
+        }
     }
 
     public void deleteProduct(UUID idProduct){
@@ -35,6 +47,12 @@ public class Cart {
                 .orElse(-1);
         if (indexProductByDelete == -1) return;
         this.items.remove(indexProductByDelete);
+    }
+
+    public BigDecimal calculateTotal(){
+        return this.items.stream()
+                .map(CartItem::subtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void clearCart(){

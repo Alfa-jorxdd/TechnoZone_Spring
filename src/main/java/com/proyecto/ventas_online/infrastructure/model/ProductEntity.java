@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @Getter
 @ToString
-@RequiredArgsConstructor
 public class ProductEntity {
     private final UUID id;
     private final String name;

@@ -9,7 +9,6 @@ import lombok.ToString;
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Getter
 @ToString
 @Builder

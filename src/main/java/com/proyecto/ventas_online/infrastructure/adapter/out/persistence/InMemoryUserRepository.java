@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,6 +23,14 @@ public class InMemoryUserRepository implements UserRepositoryPort {
     public Optional<User> findUserById(UUID id) {
         return Optional.ofNullable(repositoryUser.get(id))
                 .map(userMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return repositoryUser.values().stream()
+                .filter(userEntity -> userEntity.getEmail().equals(email))
+                .map(userMapper::toDomain)
+                .findFirst();
     }
 
     @Override
@@ -42,5 +51,11 @@ public class InMemoryUserRepository implements UserRepositoryPort {
         UserEntity userUpdated = userMapper.toEntity(userByUpdate);
         repositoryUser.put(userUpdated.getId(), userUpdated);
         return userByUpdate;
+    }
+
+    @Override
+    public List<User> getAll() {
+        return repositoryUser
+                .values().stream().map(userMapper::toDomain).toList();
     }
 }

@@ -1,6 +1,8 @@
 package com.proyecto.ventas_online.infrastructure.mappers;
 
 import com.proyecto.ventas_online.domain.model.Category;
+import com.proyecto.ventas_online.infrastructure.dto.category.CategoryResponse;
+import com.proyecto.ventas_online.infrastructure.dto.category.CreateCategoryRequest;
 import com.proyecto.ventas_online.infrastructure.model.CategoryEntity;
 import org.springframework.stereotype.Component;
 
@@ -24,5 +26,18 @@ public class CategoryMapper {
                 .id(categoryEntity.getId())
                 .name(categoryEntity.getName())
                 .buildExisting();
+    }
+
+    public Category toNewDomain(CreateCategoryRequest request) {
+        return new Category.CategoryBuild()
+                .name(request.name())
+                .buildNew();
+    }
+
+    public CategoryResponse toResponse(Category category) {
+        return new CategoryResponse(
+                category.getId(),
+                category.getName()
+        );
     }
 }

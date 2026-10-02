@@ -8,6 +8,6 @@ import java.util.UUID;
 public interface CartRepositoryPort {
     Optional<Cart> findCartById(UUID id);
     Optional<Cart> findCartByUserId(UUID userId);
-    Cart deleteCart(UUID id);
+    void deleteCartByUserId(UUID id);
     Cart saveCart(Cart cartBySave);
 }

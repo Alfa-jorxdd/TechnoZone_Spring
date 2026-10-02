@@ -1,6 +1,6 @@
 package com.proyecto.ventas_online.domain.model;
 
-import com.proyecto.ventas_online.domain.exception.InvalidQuantityException;
+import com.proyecto.ventas_online.domain.exception.cart.InvalidQuantityException;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,14 +13,12 @@ public class CartItem {
     private final BigDecimal unitPrice;
 
     public CartItem(UUID idProduct, int quantity, BigDecimal unitPrice) {
-        if (quantity <= 0) throw new InvalidQuantityException("The quantity must be greater than 0");
-        this.idProduct = UUID.randomUUID();
+        this.idProduct = idProduct;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
     }
 
     public void increaseQuantity(int amount){
-        if (amount <= 0) throw new InvalidQuantityException("The amount must be greater than 0");
         this.quantity += amount;
     }
 

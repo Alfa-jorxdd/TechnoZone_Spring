@@ -1,17 +1,13 @@
 package com.proyecto.ventas_online.infrastructure.adapter.out.persistence;
 
 import com.proyecto.ventas_online.application.ports.out.ProductRepositoryPort;
-import com.proyecto.ventas_online.domain.exception.ProductNotFoundException;
 import com.proyecto.ventas_online.domain.model.Product;
 import com.proyecto.ventas_online.infrastructure.mappers.ProductMapper;
 import com.proyecto.ventas_online.infrastructure.model.ProductEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
@@ -34,9 +30,9 @@ public class InMemoryProductRepository implements ProductRepositoryPort {
     }
 
     @Override
-    public Product deleteProduct(UUID id) {
+    public void deleteProduct(UUID id) {
         ProductEntity entityDeleted = repositoryProduct.remove(id);
-        return productMapper.toDomain(entityDeleted);
+        productMapper.toDomain(entityDeleted);
     }
 
     @Override
@@ -44,5 +40,11 @@ public class InMemoryProductRepository implements ProductRepositoryPort {
         ProductEntity entityByUpdate = productMapper.toEntity(productByUpdate);
         repositoryProduct.put(productByUpdate.getId(), entityByUpdate);
         return productByUpdate;
+    }
+
+    @Override
+    public List<Product> getAll() {
+        return repositoryProduct
+                .values().stream().map(productMapper::toDomain).toList();
     }
 }
