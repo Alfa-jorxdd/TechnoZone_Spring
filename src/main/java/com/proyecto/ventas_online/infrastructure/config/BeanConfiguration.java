@@ -17,9 +17,8 @@ public class BeanConfiguration {
 
     @Bean
     public UserService userService(UserRepositoryPort repositoryPort,
-                                   PasswordHasher passwordHasher,
-                                   CartRepositoryPort cartRepositoryPort){
-        return new UserService(repositoryPort, cartRepositoryPort, passwordHasher);
+                                   PasswordHasher passwordHasher){
+        return new UserService(repositoryPort, passwordHasher);
     }
 
     @Bean

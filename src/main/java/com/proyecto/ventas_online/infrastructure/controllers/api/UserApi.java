@@ -1,5 +1,6 @@
 package com.proyecto.ventas_online.infrastructure.controllers.api;
 
+import com.proyecto.ventas_online.infrastructure.dto.auth.RegisterRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.CreateUserRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.UpdateUserRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;

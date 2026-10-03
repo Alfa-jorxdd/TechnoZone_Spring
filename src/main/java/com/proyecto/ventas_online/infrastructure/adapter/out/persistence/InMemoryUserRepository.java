@@ -1,6 +1,7 @@
 package com.proyecto.ventas_online.infrastructure.adapter.out.persistence;
 
 import com.proyecto.ventas_online.application.ports.out.UserRepositoryPort;
+import com.proyecto.ventas_online.domain.factory.DefaultUserFactory;
 import com.proyecto.ventas_online.domain.model.User;
 import com.proyecto.ventas_online.infrastructure.mappers.UserMapper;
 import com.proyecto.ventas_online.infrastructure.model.UserEntity;
@@ -13,11 +14,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-@RequiredArgsConstructor
 public class InMemoryUserRepository implements UserRepositoryPort {
 
     private final UserMapper userMapper;
     private final HashMap<UUID, UserEntity> repositoryUser = new HashMap<>();
+
+    public InMemoryUserRepository(UserMapper userMapper) {
+        this.userMapper = userMapper;
+        DefaultUserFactory userFactory = new DefaultUserFactory();
+        userFactory.createDefaultUsers().forEach(this::saveUser);
+    }
 
     @Override
     public Optional<User> findUserById(UUID id) {

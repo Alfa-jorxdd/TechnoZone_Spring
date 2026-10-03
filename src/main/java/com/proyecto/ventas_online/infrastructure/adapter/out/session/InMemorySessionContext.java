@@ -3,9 +3,12 @@ package com.proyecto.ventas_online.infrastructure.adapter.out.session;
 import com.proyecto.ventas_online.application.ports.out.SessionContext;
 import com.proyecto.ventas_online.domain.exception.session.NoActiveSessionException;
 import com.proyecto.ventas_online.domain.model.Role;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+@Repository
 public class InMemorySessionContext implements SessionContext {
 
     private static final InMemorySessionContext INSTANCE = new InMemorySessionContext();

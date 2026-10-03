@@ -6,6 +6,9 @@ import com.proyecto.ventas_online.application.ports.out.ProductRepositoryPort;
 import com.proyecto.ventas_online.domain.exception.category.CategoryNotFoundException;
 import com.proyecto.ventas_online.domain.exception.product.ProductNotFoundException;
 import com.proyecto.ventas_online.domain.model.Product;
+import com.proyecto.ventas_online.infrastructure.adapter.out.persistence.InMemoryProductRepository;
+import lombok.Builder;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Component
 public class CartMapper {
-
     public Cart toDomain(CartEntity cartEntity){
         if (cartEntity == null){
             return null;

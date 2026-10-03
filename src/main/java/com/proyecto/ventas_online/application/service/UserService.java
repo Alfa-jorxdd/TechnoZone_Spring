@@ -8,8 +8,10 @@ import com.proyecto.ventas_online.domain.exception.cart.CartNotFoundException;
 import com.proyecto.ventas_online.domain.exception.user.DuplicateUserEmailException;
 import com.proyecto.ventas_online.domain.exception.user.UserNotFoundException;
 import com.proyecto.ventas_online.domain.model.User;
+import com.proyecto.ventas_online.infrastructure.dto.auth.RegisterRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.CreateUserCommand;
 import com.proyecto.ventas_online.infrastructure.dto.user.UpdateUserCommand;
+import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,10 +24,9 @@ public class UserService implements
         DeleteUserUseCase,
         GetAllUsersUseCase,
         GetUserUseCase,
-        UpdateUserUseCase {
+        UpdateUserUseCase{
 
     private final UserRepositoryPort userRepository;
-    private final CartRepositoryPort cartRepository;
     private final PasswordHasher passwordHasher;
 
     @Override

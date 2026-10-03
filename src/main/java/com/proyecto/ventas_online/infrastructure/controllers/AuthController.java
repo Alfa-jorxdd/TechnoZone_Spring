@@ -13,8 +13,11 @@ import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
 import com.proyecto.ventas_online.infrastructure.mappers.UserMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
-@Valid
+@Component
+@Validated
 @RequiredArgsConstructor
 public class AuthController implements AuthApi {
 

@@ -4,7 +4,9 @@ import com.proyecto.ventas_online.infrastructure.dto.auth.LoginRequest;
 import com.proyecto.ventas_online.infrastructure.dto.auth.RegisterRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
 import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 public interface AuthApi {
     UserResponse login(@Valid LoginRequest request);
     void logout();

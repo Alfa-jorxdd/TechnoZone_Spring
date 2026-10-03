@@ -1,8 +1,10 @@
 package com.proyecto.ventas_online.infrastructure.controllers;
 
 import com.proyecto.ventas_online.application.ports.in.user.*;
+import com.proyecto.ventas_online.domain.model.Role;
 import com.proyecto.ventas_online.domain.model.User;
 import com.proyecto.ventas_online.infrastructure.controllers.api.UserApi;
+import com.proyecto.ventas_online.infrastructure.dto.auth.RegisterRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.*;
 import com.proyecto.ventas_online.infrastructure.mappers.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class UserController implements UserApi {
     private final GetAllUsersUseCase getAllUsersUseCase;
     private final GetUserUseCase getUserUseCase;
     private final UpdateUserUseCase updateUserUseCase;
+
 
     @Override
     public UserResponse create(CreateUserRequest request) {
