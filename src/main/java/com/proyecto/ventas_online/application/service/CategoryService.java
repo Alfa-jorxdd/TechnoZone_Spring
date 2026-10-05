@@ -29,7 +29,7 @@ public class CategoryService implements
                                 .equalsIgnoreCase(categoryToSave.getName().toLowerCase()))
                 .findFirst();
 
-        if (categoryAux.isEmpty()){
+        if (categoryAux.isPresent()){
             throw new DuplicateCategoryException(categoryToSave.getName());
         }
         return categoryRepository.saveCategory(categoryToSave);

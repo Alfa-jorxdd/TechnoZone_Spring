@@ -61,11 +61,6 @@ public class CartController implements CartApi {
     }
 
     @Override
-    public CartResponse findByUserId() {
-        return cartMapper.toResponse(getCartByUserUseCase.findCartByUserId());
-    }
-
-    @Override
     public void deleteByUser() {
         deleteCartByUserUseCase.deleteCartByUserId();
     }

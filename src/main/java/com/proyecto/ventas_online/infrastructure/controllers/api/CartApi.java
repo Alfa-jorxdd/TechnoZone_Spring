@@ -16,6 +16,5 @@ public interface CartApi {
     CartResponse clear();
     CartResponse getMyCart();
     CartResponse findById(UUID idCart);
-    CartResponse findByUserId();
     void deleteByUser();
 }

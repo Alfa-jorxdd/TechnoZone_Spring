@@ -1,9 +1,11 @@
 package com.proyecto.ventas_online.infrastructure.mappers;
 
 import com.proyecto.ventas_online.domain.model.Product;
+import com.proyecto.ventas_online.domain.model.User;
 import com.proyecto.ventas_online.infrastructure.dto.product.CreateProductRequest;
 import com.proyecto.ventas_online.infrastructure.dto.product.ProductResponse;
 import com.proyecto.ventas_online.infrastructure.dto.product.UpdateProductRequest;
+import com.proyecto.ventas_online.infrastructure.dto.user.CreateUserCommand;
 import com.proyecto.ventas_online.infrastructure.model.ProductEntity;
 import lombok.extern.apachecommons.CommonsLog;
 import org.springframework.stereotype.Component;
@@ -36,6 +38,16 @@ public class ProductMapper {
                 .imagePath(request.imagePath())
                 .stock(request.stock())
                 .buildNew();
+    }
+
+    public CreateUserCommand toCommand(User user){
+        return new CreateUserCommand(
+                user.getName(),
+                user.getLastname(),
+                user.getEmail(),
+                user.getPasswordHash(),
+                user.getRole()
+        );
     }
 
     public ProductEntity toEntity(Product product){

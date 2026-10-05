@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -40,28 +41,34 @@ public class CartService implements
     private final SessionContext sessionContext;
 
     @Override
-    public Cart addProduct(UUID idProduct, int quantity) {
+    public Cart addProduct(UUID idProduct, int quantityProduct) {
         Product product = productRepository.findProductById(idProduct)
                 .orElseThrow(() -> new ProductNotFoundException(idProduct));
 
-        if (quantity <= 0){
+        if (quantityProduct <= 0){
             throw new InvalidQuantityException();
-        }
-        if (quantity < product.getStock()){
-            throw new InsufficientStockException();
         }
 
         UUID idUser = sessionContext.getCurrentUserId();
         Cart cartToSave = cartRepository.findCartByUserId(idUser)
                 .orElseGet(this::createCart);
 
+        int quantityCartItem = cartToSave.getItems().stream()
+                .filter(item -> item.getIdProduct().equals(idProduct))
+                .findFirst()
+                .map(CartItem::getQuantity).orElse(0);
+
+        if (quantityCartItem + quantityProduct > product.getStock()) {
+            throw new InsufficientStockException();
+        }
+
         cartToSave.getItems().stream()
                 .filter(item -> item.getIdProduct().equals(idProduct))
                 .findFirst()
                 .ifPresentOrElse(
-                        item -> item.increaseQuantity(quantity)
+                        item -> item.increaseQuantity(quantityProduct)
                         ,
-                        () -> cartToSave.addProduct(idProduct, quantity, product.getPrice())
+                        () -> cartToSave.addProduct(idProduct, quantityProduct, product.getPrice())
                 );
         return cartRepository.saveCart(cartToSave);
     }

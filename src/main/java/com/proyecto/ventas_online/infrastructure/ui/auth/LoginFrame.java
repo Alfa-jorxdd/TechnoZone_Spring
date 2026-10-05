@@ -2,8 +2,10 @@ package com.proyecto.ventas_online.infrastructure.ui.auth;
 
 import com.proyecto.ventas_online.domain.exception.DomainException;
 import com.proyecto.ventas_online.infrastructure.controllers.api.AuthApi;
+import com.proyecto.ventas_online.infrastructure.controllers.api.CategoryApi;
 import com.proyecto.ventas_online.infrastructure.dto.auth.LoginRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
+import com.proyecto.ventas_online.infrastructure.ui.factory.provider.WindowFactoryProvider;
 import jakarta.validation.ConstraintViolationException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -15,10 +17,13 @@ public class LoginFrame extends javax.swing.JFrame {
     
     private final AuthApi authApi;
     private final RegisterFrame registerFrame;
+    private final WindowFactoryProvider provider;
+    private final CategoryApi categoryApi;
 
-    public LoginFrame(AuthApi authApi, RegisterFrame registerFrame) {
+    public LoginFrame(AuthApi authApi, RegisterFrame registerFrame, WindowFactoryProvider provider, CategoryApi categoryApi) {
         this.authApi = authApi;
         this.registerFrame = registerFrame;
+        this.provider = provider;
         initComponents();
         
         setTitle("Ventas Online - Ingresar");
@@ -32,8 +37,8 @@ public class LoginFrame extends javax.swing.JFrame {
             }
             
         });
+        this.categoryApi = categoryApi;
     }
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -162,6 +167,11 @@ public class LoginFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void clearFields(){
+        emailField.setText("");
+        passwordField.setText("");
+    }
+    
     private void onLogin(){
         try {
             LoginRequest request = new LoginRequest(
@@ -170,8 +180,19 @@ public class LoginFrame extends javax.swing.JFrame {
             );
             UserResponse response = authApi.login(request);
             System.out.println(response.toString());
-            JOptionPane.showMessageDialog(this, "¡Bienvenido!",
+            JOptionPane.showMessageDialog(this, "¡Bienvenido " + response.name() + response.lastname() + "!",
                     "Ingreso exitoso", JOptionPane.WARNING_MESSAGE);
+            setVisible(false);
+            clearFields();
+            
+            Runnable onLogout =() -> {
+                authApi.logout();
+                setVisible(true);
+            };
+            
+            provider.open(authApi.getCurrentSession().role(), onLogout);
+            System.out.println("Si llega hasta el final");
+            
         } catch (DomainException | ConstraintViolationException e) {
             System.out.println(e);
             JOptionPane.showMessageDialog(this, e.getMessage(),

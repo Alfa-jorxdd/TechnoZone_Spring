@@ -3,6 +3,7 @@ package com.proyecto.ventas_online.infrastructure.adapter.out.session;
 import com.proyecto.ventas_online.application.ports.out.SessionContext;
 import com.proyecto.ventas_online.domain.exception.session.NoActiveSessionException;
 import com.proyecto.ventas_online.domain.model.Role;
+import com.proyecto.ventas_online.domain.model.Session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +13,6 @@ import java.util.UUID;
 public class InMemorySessionContext implements SessionContext {
 
     private static final InMemorySessionContext INSTANCE = new InMemorySessionContext();
-
-    private record Session(UUID userId, Role role) {}
 
     private Session session;
 
@@ -35,12 +34,12 @@ public class InMemorySessionContext implements SessionContext {
 
     @Override
     public UUID getCurrentUserId() {
-        return requireSession().userId;
+        return requireSession().userId();
     }
 
     @Override
     public Role getCurrentRole() {
-        return requireSession().role;
+        return requireSession().role();
     }
 
     @Override

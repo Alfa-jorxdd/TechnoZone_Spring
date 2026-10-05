@@ -17,7 +17,6 @@ public class InMemoryCategoryRepository implements CategoryRepositoryPort {
 
     public InMemoryCategoryRepository(CategoryMapper categoryMapper) {
         this.categoryMapper = categoryMapper;
-        DefaultCategoryFactory.createDefaults().forEach(this::saveCategory);
     }
 
     @Override

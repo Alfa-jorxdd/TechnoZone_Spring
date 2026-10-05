@@ -8,13 +8,11 @@ import javax.swing.*;
 import java.util.List;
 
 public class DefaultUserFactory {
-
-    private final PasswordHasher passwordHasher = new BCryptPasswordHasher();
-
-    public List<User> createDefaultUsers(){
-        String hash = passwordHasher.encode("anghelo12345");
+    public static List<User> createDefaultUsers(){
         return List.of(
-                User.create("Anghelo", "Arrunategui", "anghelo@gmail.com", hash, Role.ADMIN)
+                User.create("Anghelo", "Arrunategui", "anghelo@gmail.com", "anghelo123", Role.ADMIN),
+                User.create("Fernando", "Ludeña", "fernando@gmail.com", "fernando123", Role.CLIENT),
+                User.create("Armando", "Patiño", "armando@gmail.com", "armando123", Role.CLIENT)
         );
     }
 }

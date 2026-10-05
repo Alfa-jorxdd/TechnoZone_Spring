@@ -1,5 +1,6 @@
 package com.proyecto.ventas_online.application.service;
 
+import com.proyecto.ventas_online.application.ports.in.auth.GetSessionUseCase;
 import com.proyecto.ventas_online.application.ports.in.auth.LoginUseCase;
 import com.proyecto.ventas_online.application.ports.in.auth.LogoutUseCase;
 import com.proyecto.ventas_online.application.ports.out.PasswordHasher;
@@ -7,13 +8,15 @@ import com.proyecto.ventas_online.application.ports.out.SessionContext;
 import com.proyecto.ventas_online.application.ports.out.UserRepositoryPort;
 import com.proyecto.ventas_online.domain.exception.auth.InvalidCredentialsException;
 import com.proyecto.ventas_online.domain.exception.user.UserNotFoundException;
+import com.proyecto.ventas_online.domain.model.Session;
 import com.proyecto.ventas_online.domain.model.User;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class AuthService implements
         LoginUseCase,
-        LogoutUseCase {
+        LogoutUseCase,
+        GetSessionUseCase {
 
     private final PasswordHasher passwordHasher;
 
@@ -34,5 +37,11 @@ public class AuthService implements
     @Override
     public void logout() {
         sessionContext.logout();
+    }
+
+    @Override
+    public Session getCurrentSession() {
+        return new Session(sessionContext.getCurrentUserId(),
+                sessionContext.getCurrentRole());
     }
 }

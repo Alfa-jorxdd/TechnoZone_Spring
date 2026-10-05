@@ -21,8 +21,6 @@ public class InMemoryUserRepository implements UserRepositoryPort {
 
     public InMemoryUserRepository(UserMapper userMapper) {
         this.userMapper = userMapper;
-        DefaultUserFactory userFactory = new DefaultUserFactory();
-        userFactory.createDefaultUsers().forEach(this::saveUser);
     }
 
     @Override
