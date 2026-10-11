@@ -17,5 +17,4 @@ public class WindowAdminFactory extends WindowFactory {
     public WindowUser createWindow(Runnable r) {
         return new WindowAdmin(r);
     }
-    
 }

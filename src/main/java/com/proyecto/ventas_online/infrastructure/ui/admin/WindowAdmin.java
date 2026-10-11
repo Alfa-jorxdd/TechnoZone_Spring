@@ -40,7 +40,7 @@ public class WindowAdmin extends javax.swing.JFrame implements WindowUser{
         jPanel1.setBackground(new java.awt.Color(0, 102, 255));
 
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Hola papu admin");
+        jLabel1.setText("Hola admin :D");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);

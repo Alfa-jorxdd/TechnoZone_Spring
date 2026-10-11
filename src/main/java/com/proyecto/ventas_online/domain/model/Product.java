@@ -17,16 +17,6 @@ public class Product {
     private final String imagePath;
     private final Integer stock;
 
-    public Product(String name, String description, BigDecimal price, UUID idCategory, String imagePath, Integer stock) {
-        this.id = UUID.randomUUID();
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.idCategory = idCategory;
-        this.imagePath = imagePath;
-        this.stock = stock;
-    }
-
     private Product(ProductBuilder builder){
         this.id = builder.id;
         this.name = builder.name;

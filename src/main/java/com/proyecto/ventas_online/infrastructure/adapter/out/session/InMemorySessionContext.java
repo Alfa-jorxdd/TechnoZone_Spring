@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
 public class InMemorySessionContext implements SessionContext {
 
     private static final InMemorySessionContext INSTANCE = new InMemorySessionContext();

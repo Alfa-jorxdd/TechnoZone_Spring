@@ -54,8 +54,16 @@ public final class DefaultProductsFactory {
 
     private static Product p(String name, String description, String price,
                              UUID categoryId, String image, int stock) {
-        return new Product(name, description, new BigDecimal(price),
+        return new Product.ProductBuilder()
+                .name(name)
+                .description(description)
+                .price(new BigDecimal(price))
+                .idCategory(categoryId)
+                .imagePath("/images_small" + "/" + image)
+                .stock(stock)
+                .buildNew();
+        /*return new Product(name, description, new BigDecimal(price),
                 categoryId, "/images_small" +
-                "/" + image, stock);
+                "/" + image, stock);*/
     }
 }

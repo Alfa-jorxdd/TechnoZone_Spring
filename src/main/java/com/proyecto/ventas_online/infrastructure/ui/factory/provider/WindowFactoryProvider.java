@@ -16,7 +16,8 @@ public class WindowFactoryProvider {
     
     public WindowFactoryProvider(List<WindowFactory> factories){
         this.factories = factories.stream()
-                .collect(Collectors.toMap(WindowFactory::role, windowFactory -> windowFactory));
+                .collect(Collectors.toMap(WindowFactory::role
+                        , windowFactory -> windowFactory));
     }
 
     public void open(Role role, Runnable r){
