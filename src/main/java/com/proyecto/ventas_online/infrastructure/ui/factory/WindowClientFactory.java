@@ -1,7 +1,7 @@
 package com.proyecto.ventas_online.infrastructure.ui.factory;
 
 import com.proyecto.ventas_online.domain.model.Role;
-import com.proyecto.ventas_online.infrastructure.controllers.api.*;
+import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.*;
 import com.proyecto.ventas_online.infrastructure.ui.client.WindowClient;
 import com.proyecto.ventas_online.infrastructure.ui.WindowUser;
 import lombok.RequiredArgsConstructor;

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class WindowFactoryProvider {
     
     private final Map<Role, WindowFactory> factories;
-    
+
     public WindowFactoryProvider(List<WindowFactory> factories){
         this.factories = factories.stream()
                 .collect(Collectors.toMap(WindowFactory::role

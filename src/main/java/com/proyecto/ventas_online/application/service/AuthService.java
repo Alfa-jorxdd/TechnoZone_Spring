@@ -27,6 +27,7 @@ public class AuthService implements
     public User login(String email, String rawPassword) {
         User userToLogin = userRepository.findUserByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
+
         if (!passwordHasher.matches(rawPassword, userToLogin.getPasswordHash())){
             throw new InvalidCredentialsException();
         }

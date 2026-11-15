@@ -1,16 +1,19 @@
 package com.proyecto.ventas_online.domain.model;
 
-import com.proyecto.ventas_online.domain.exception.cart.InvalidQuantityException;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class CartItem {
     private final UUID idProduct;
     private int quantity;
-    private final BigDecimal unitPrice;
+    private BigDecimal unitPrice;
 
     public CartItem(UUID idProduct, int quantity, BigDecimal unitPrice) {
         this.idProduct = idProduct;
@@ -33,4 +36,6 @@ public class CartItem {
     public BigDecimal subtotal(){
         return unitPrice.multiply(BigDecimal.valueOf(quantity));
     }
+
+
 }

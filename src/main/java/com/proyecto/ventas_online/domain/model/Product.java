@@ -1,5 +1,6 @@
 package com.proyecto.ventas_online.domain.model;
 
+import com.proyecto.ventas_online.domain.exception.cart.InvalidQuantityException;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -15,7 +16,7 @@ public class Product {
     private final BigDecimal price;
     private final UUID idCategory;
     private final String imagePath;
-    private final Integer stock;
+    private Integer stock;
 
     private Product(ProductBuilder builder){
         this.id = builder.id;
@@ -25,6 +26,26 @@ public class Product {
         this.price = builder.price;
         this.imagePath = builder.imagePath;
         this.stock = builder.stock;
+    }
+
+    public void decraseStock(Integer quantity){
+        if (quantity == null){
+            throw new NullPointerException();
+        }
+        if (quantity > stock || quantity <= 0){
+            throw new InvalidQuantityException();
+        }
+        stock -= quantity;
+    }
+
+    public void increaseStock(Integer quantity){
+        if (quantity == null){
+            throw new NullPointerException();
+        }
+        if (quantity <= 0){
+            throw new InvalidQuantityException();
+        }
+        stock += quantity;
     }
 
     public static class ProductBuilder{

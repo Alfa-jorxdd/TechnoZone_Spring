@@ -1,7 +1,6 @@
 package com.proyecto.ventas_online.infrastructure.ui.client;
 
-import com.proyecto.ventas_online.domain.model.User;
-import com.proyecto.ventas_online.infrastructure.controllers.api.*;
+import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.*;
 import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
 import com.proyecto.ventas_online.infrastructure.ui.WindowUser;
 import com.proyecto.ventas_online.infrastructure.ui.client.panels.CartPanel;

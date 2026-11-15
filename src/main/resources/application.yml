@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: ventas_online
+  profiles:
+    active: cart-in-memory
+  config:
+    import: optional:file:.env[.properties]
+login:
+  users:
+    - first-name: Anghelo
+      last-name: Arrunategui
+      email: anghelo@gmail.com
+      rawPassword: anghelo123
+      role: ADMIN
+    - first-name: Fernando
+      last-name: Ludeña
+      email: fernando@gmail.com
+      rawPassword: fernando123
+      role: CLIENT
+    - first-name: Armando
+      last-name: Patiño
+      email: armando@gmail.com
+      rawPassword: armando123
+      role: CLIENT
+paypal:
+  client-id: ${PAYPAL_CLIENT_ID_SANDBOX}
+  secret-key: ${PAYPAL_SECRET_KEY_SANDBOX}

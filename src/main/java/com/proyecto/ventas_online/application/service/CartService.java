@@ -96,9 +96,6 @@ public class CartService implements
 
     @Override
     public Cart deleteItemCart(UUID idProduct) {
-        productRepository.findProductById(idProduct)
-                .orElseThrow(() -> new ProductNotFoundException(idProduct));
-
         UUID idUser = sessionContext.getCurrentUserId();
         Cart cart = cartRepository.findCartByUserId(idUser)
                 .orElseThrow(UserNotFoundException::new);

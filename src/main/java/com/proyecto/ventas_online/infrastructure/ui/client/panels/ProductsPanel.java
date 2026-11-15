@@ -1,8 +1,8 @@
 package com.proyecto.ventas_online.infrastructure.ui.client.panels;
 
 import com.proyecto.ventas_online.domain.exception.DomainException;
-import com.proyecto.ventas_online.infrastructure.controllers.api.CartApi;
-import com.proyecto.ventas_online.infrastructure.controllers.api.ProductApi;
+import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.CartApi;
+import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.ProductApi;
 import com.proyecto.ventas_online.infrastructure.dto.cart.AddProductToCartRequest;
 import com.proyecto.ventas_online.infrastructure.dto.product.ProductResponse;
 import jakarta.validation.ConstraintViolationException;

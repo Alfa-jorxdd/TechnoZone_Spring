@@ -5,15 +5,14 @@ import com.proyecto.ventas_online.domain.model.Cart;
 import com.proyecto.ventas_online.infrastructure.mappers.CartMapper;
 import com.proyecto.ventas_online.infrastructure.model.CartEntity;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @RequiredArgsConstructor
+@Profile("cart-in-memory")
 public class InMemoryCartRepository implements CartRepositoryPort {
 
     private final CartMapper cartMapper;
@@ -30,6 +29,12 @@ public class InMemoryCartRepository implements CartRepositoryPort {
         return repositoryCart.values().stream()
                 .filter(cartEntity -> cartEntity.getIdClient().equals(userId))
                 .findFirst().map(cartMapper::toDomain);
+    }
+
+    @Override
+    public List<Cart> findAll() {
+        return repositoryCart.values().stream()
+                .map(cartMapper::toDomain).toList();
     }
 
     @Override

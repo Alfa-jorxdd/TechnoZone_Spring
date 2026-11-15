@@ -1,13 +1,11 @@
 package com.proyecto.ventas_online.infrastructure.ui.auth;
 
 import com.proyecto.ventas_online.domain.exception.DomainException;
-import com.proyecto.ventas_online.infrastructure.controllers.api.AuthApi;
-import com.proyecto.ventas_online.infrastructure.controllers.api.UserApi;
+import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.AuthApi;
 import com.proyecto.ventas_online.infrastructure.dto.auth.RegisterRequest;
-import com.proyecto.ventas_online.infrastructure.dto.user.CreateUserRequest;
 import com.proyecto.ventas_online.infrastructure.dto.user.UserResponse;
 import jakarta.validation.ConstraintViolationException;
-import java.awt.event.WindowListener;
+
 import javax.swing.JOptionPane;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +13,8 @@ import org.springframework.stereotype.Component;
 public class RegisterFrame extends javax.swing.JFrame {
 
     private final AuthApi api;
-    private Runnable r;
-    
+    private Runnable onExit;
+
     public RegisterFrame(AuthApi api) {
         this.api = api;
         initComponents();
@@ -25,20 +23,20 @@ public class RegisterFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }
     
-    public void open(Runnable r){
-        this.r = r;
+    public void open(Runnable onExit){
+        this.onExit = onExit;
         clearFields();
         setVisible(true);
     }
     
-    public void close(){
+    private void close(){
         setVisible(false);
-        if (r != null) {
-            r.run();
+        if (onExit != null) {
+            onExit.run();
         }
     }
     
-    public void clearFields(){
+    private void clearFields(){
         nameField.setText("");
         lastnameField.setText("");
         emailField.setText("");
@@ -46,7 +44,7 @@ public class RegisterFrame extends javax.swing.JFrame {
         confirmPasswordField.setText("");
     }
     
-    public void onRegister(){
+    private void onRegister(){
         if(!passwordField.getText().trim().equals(confirmPasswordField.getText().trim())){
             JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden",
                     "No se pudo registrar", JOptionPane.WARNING_MESSAGE);
@@ -213,8 +211,8 @@ public class RegisterFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_registerButtonActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        if (r != null) {
-            r.run();
+        if (onExit != null) {
+            onExit.run();
         }
     }//GEN-LAST:event_formWindowClosing
 
