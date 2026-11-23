@@ -1,4 +1,4 @@
-package com.proyecto.ventas_online.infrastructure.config.payment;
+package com.proyecto.ventas_online.infrastructure.config.payment.status;
 
 import com.proyecto.ventas_online.application.ports.in.payment.PaymentStatusUseCase;
 import com.proyecto.ventas_online.application.ports.out.CartRepositoryPort;

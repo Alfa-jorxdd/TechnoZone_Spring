@@ -1,4 +1,4 @@
-package com.proyecto.ventas_online.domain.response;
+package com.proyecto.ventas_online.infrastructure.dto.purchase;
 
 import com.proyecto.ventas_online.domain.model.Purchase;
 

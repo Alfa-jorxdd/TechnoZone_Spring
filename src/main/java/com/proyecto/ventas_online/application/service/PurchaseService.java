@@ -9,13 +9,14 @@ import com.proyecto.ventas_online.application.ports.out.SessionContext;
 import com.proyecto.ventas_online.application.ports.out.PurchaseRepositoryPort;
 import com.proyecto.ventas_online.application.ports.out.payment.PaymentResponse;
 import com.proyecto.ventas_online.application.service.payment.PaymentGatewayRegistry;
-import com.proyecto.ventas_online.domain.response.CheckoutResponse;
+import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResponse;
 import com.proyecto.ventas_online.application.service.payment.status.register.PaymentStatusUseCaseRegistry;
 import com.proyecto.ventas_online.domain.exception.cart.CartNotFoundException;
 import com.proyecto.ventas_online.domain.exception.product.InsufficientStockException;
 import com.proyecto.ventas_online.domain.exception.product.ProductNotFoundException;
 import com.proyecto.ventas_online.domain.exception.purchase.PurchaseNotFoundException;
 import com.proyecto.ventas_online.domain.model.*;
+import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResultResponse;
 import lombok.RequiredArgsConstructor;
 
 import java.util.HashMap;
@@ -38,14 +39,14 @@ public class PurchaseService implements
     private final ProductRepositoryPort productRepositoryPort;
 
     @Override
-    public CheckoutResponse checkout(PaymentInput input) {
+    public CheckoutResultResponse checkout(PaymentInput input) {
         Purchase newPurchase = getCurrentPurchase(input);
         validateStock(newPurchase);
         PaymentResponse response = chargePurchase(input, newPurchase);
         PaymentStatusUseCase paymentStatusUseCase = paymentStatusUseCaseRegistry.getHandler(response.getStatus());
         paymentStatusUseCase.handle(newPurchase);
 
-        return new CheckoutResponse(newPurchase, response.getApprovalUrl());
+        return new CheckoutResultResponse(newPurchase, response.getApprovalUrl());
     }
 
     @Override

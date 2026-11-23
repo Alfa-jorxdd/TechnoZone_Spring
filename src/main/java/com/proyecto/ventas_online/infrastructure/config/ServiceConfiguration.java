@@ -1,5 +1,6 @@
 package com.proyecto.ventas_online.infrastructure.config;
 
+import com.proyecto.ventas_online.application.event.DomainEventListener;
 import com.proyecto.ventas_online.application.ports.in.payment.PaymentStatusUseCase;
 import com.proyecto.ventas_online.application.ports.out.*;
 import com.proyecto.ventas_online.application.ports.out.payment.PaymentConfirmationPort;
@@ -11,6 +12,7 @@ import com.proyecto.ventas_online.domain.factory.DefaultCategoryFactory;
 import com.proyecto.ventas_online.domain.factory.DefaultProductsFactory;
 import com.proyecto.ventas_online.domain.factory.DefaultUserFactory;
 import com.proyecto.ventas_online.domain.model.Category;
+import com.proyecto.ventas_online.infrastructure.adapter.out.event.EventBus;
 import com.proyecto.ventas_online.infrastructure.adapter.out.session.InMemorySessionContext;
 import com.proyecto.ventas_online.infrastructure.mappers.ProductMapper;
 import org.springframework.boot.CommandLineRunner;
@@ -28,8 +30,22 @@ public class ServiceConfiguration {
     @Bean
     public ProductService productService(ProductRepositoryPort productRepositoryPort,
                                          CategoryRepositoryPort categoryRepositoryPort,
-                                         CartRepositoryPort cartRepositoryPort) {
-        return new ProductService(productRepositoryPort, categoryRepositoryPort, cartRepositoryPort);
+                                         DomainEventPublisher publisher) {
+        return new ProductService(productRepositoryPort, categoryRepositoryPort, publisher);
+    }
+
+    @Bean
+    public CartProductUpdatedListener cartProductUpdatedListener(CartRepositoryPort carts){
+        return new CartProductUpdatedListener(carts);
+    }
+
+    @Bean
+    public CartProductDeletedListener cartProductDeletedListener(CartRepositoryPort cats){
+        return new CartProductDeletedListener(cats);
+    }
+
+    public EventBus eventBus(List<DomainEventListener<?>> listeners){
+        return new EventBus(listeners);
     }
 
     @Bean

@@ -1,6 +1,6 @@
 package com.proyecto.ventas_online.infrastructure.mappers;
 
-import com.proyecto.ventas_online.domain.response.CheckoutResponse;
+import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResponse;
 import com.proyecto.ventas_online.domain.model.Purchase;
 import com.proyecto.ventas_online.domain.model.PurchaseItem;
 import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResultResponse;

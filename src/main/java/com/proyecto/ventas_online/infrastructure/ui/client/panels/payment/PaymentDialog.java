@@ -1,10 +1,34 @@
 package com.proyecto.ventas_online.infrastructure.ui.client.panels.payment;
 
+import java.awt.BorderLayout;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.JPanel;
+
 public class PaymentDialog extends javax.swing.JDialog {
+    
+    private final PayWithPaypalPanel paypalPanel;
+    
+    private final Map<Integer, JPanel> paymentPanels = new HashMap<>();
+    private final List<JPanels> paymentPanelsList;
 
     public PaymentDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        containerPanel.setLayout(new BorderLayout());
+        
+        this.paypalPanel = new PayWithPaypalPanel();
+        
+        this.paymentPanelsList = List.of(
+                paypalPanel
+        );
+        
+        this.paymentPanelsList.forEach((panel) -> {
+            paymentPanels.put(paymentPanels.size(), panel);
+        });
+            
+        showPanel(paypalPanel);
     }
 
     @SuppressWarnings("unchecked")
@@ -12,7 +36,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private void initComponents() {
 
         bg = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        containerPanel = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         boxPaymentType = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
@@ -21,20 +45,22 @@ public class PaymentDialog extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        containerPanel.setBackground(new java.awt.Color(204, 204, 204));
+        containerPanel.setName(""); // NOI18N
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout containerPanelLayout = new javax.swing.GroupLayout(containerPanel);
+        containerPanel.setLayout(containerPanelLayout);
+        containerPanelLayout.setHorizontalGroup(
+            containerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        containerPanelLayout.setVerticalGroup(
+            containerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 150, Short.MAX_VALUE)
         );
 
         boxPaymentType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Paypal", "Yape", "Transferencia" }));
+        boxPaymentType.addActionListener(this::boxPaymentTypeActionPerformed);
 
         jLabel1.setText("Tipo de pago:");
 
@@ -59,7 +85,7 @@ public class PaymentDialog extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        btnPay.setText("jButton1");
+        btnPay.setText("Pagar");
         btnPay.addActionListener(this::btnPayActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -86,8 +112,8 @@ public class PaymentDialog extends javax.swing.JDialog {
             .addGroup(bgLayout.createSequentialGroup()
                 .addGap(64, 64, 64)
                 .addGroup(bgLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(containerPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(61, Short.MAX_VALUE))
         );
@@ -97,7 +123,7 @@ public class PaymentDialog extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(containerPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
@@ -117,17 +143,44 @@ public class PaymentDialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void showPanel(JPanel panel){
+        containerPanel.removeAll();
+        containerPanel.add(panel, new BorderLayout());
+        
+        containerPanel.revalidate();
+        containerPanel.repaint();
+    }
+    
+    private void changePaymentPanel(int index){
+        JPanel panel = paymentPanels.get(index);
+        showPanel(panel);
+    }
+    
+    private void changeTextBtnIfPayPaypal(){
+        String nombreOpcion = (String) boxPaymentType.getSelectedItem();
+        if (nombreOpcion.equals("Paypal")) {
+            btnPay.setText("Confirmar");
+        } else {
+            btnPay.setText("Pagar");
+        }
+    }
+    
     private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
         
     }//GEN-LAST:event_btnPayActionPerformed
+
+    private void boxPaymentTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boxPaymentTypeActionPerformed
+        changePaymentPanel(boxPaymentType.getSelectedIndex());
+        changeTextBtnIfPayPaypal();
+    }//GEN-LAST:event_boxPaymentTypeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bg;
     private javax.swing.JComboBox<String> boxPaymentType;
     private javax.swing.JButton btnPay;
+    private javax.swing.JPanel containerPanel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     // End of variables declaration//GEN-END:variables
