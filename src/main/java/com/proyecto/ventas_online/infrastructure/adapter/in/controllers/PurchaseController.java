@@ -1,10 +1,7 @@
 package com.proyecto.ventas_online.infrastructure.adapter.in.controllers;
 
 import com.proyecto.ventas_online.application.ports.in.payment.PaymentInput;
-import com.proyecto.ventas_online.application.ports.in.purchase.CheckoutUseCase;
-import com.proyecto.ventas_online.application.ports.in.purchase.ConfirmPurchaseUseCase;
-import com.proyecto.ventas_online.application.ports.in.purchase.GetPurchaseHistoryUseCase;
-import com.proyecto.ventas_online.application.ports.in.purchase.GetPurchaseUseCase;
+import com.proyecto.ventas_online.application.ports.in.purchase.*;
 import com.proyecto.ventas_online.infrastructure.adapter.in.controllers.api.PurchaseApi;
 import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResultResponse;
 import com.proyecto.ventas_online.infrastructure.dto.purchase.PurchaseResponse;
@@ -24,6 +21,7 @@ public class PurchaseController implements PurchaseApi {
     private final ConfirmPurchaseUseCase confirmPurchaseUseCase;
     private final GetPurchaseUseCase getPurchaseUseCase;
     private final GetPurchaseHistoryUseCase getPurchaseHistoryUseCase;
+    private final CancelPurchaseUseCase cancelPurchaseUseCase;
     private final PurchaseMapper mapper;
 
     @Override
@@ -38,6 +36,11 @@ public class PurchaseController implements PurchaseApi {
             throw new IllegalArgumentException("La transacción es obligatoria");
         }
         return mapper.toResponse(confirmPurchaseUseCase.confirm(transactionId));
+    }
+
+    @Override
+    public PurchaseResponse cancel(UUID idPurchase) {
+        return mapper.toResponse(cancelPurchaseUseCase.cancel(idPurchase));
     }
 
     @Override

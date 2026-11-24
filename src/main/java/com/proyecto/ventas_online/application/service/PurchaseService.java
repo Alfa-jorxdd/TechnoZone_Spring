@@ -9,8 +9,10 @@ import com.proyecto.ventas_online.application.ports.out.SessionContext;
 import com.proyecto.ventas_online.application.ports.out.PurchaseRepositoryPort;
 import com.proyecto.ventas_online.application.ports.out.payment.PaymentResponse;
 import com.proyecto.ventas_online.application.service.payment.PaymentGatewayRegistry;
+import com.proyecto.ventas_online.application.service.payment.state.PurchaseContext;
+import com.proyecto.ventas_online.application.service.payment.state.PurchaseContextFactory;
+import com.proyecto.ventas_online.domain.exception.purchase.PurchaseNotPendingException;
 import com.proyecto.ventas_online.infrastructure.dto.purchase.CheckoutResponse;
-import com.proyecto.ventas_online.application.service.payment.status.register.PaymentStatusUseCaseRegistry;
 import com.proyecto.ventas_online.domain.exception.cart.CartNotFoundException;
 import com.proyecto.ventas_online.domain.exception.product.InsufficientStockException;
 import com.proyecto.ventas_online.domain.exception.product.ProductNotFoundException;
@@ -29,34 +31,45 @@ public class PurchaseService implements
         CheckoutUseCase,
         GetPurchaseUseCase,
         GetPurchaseHistoryUseCase,
-        ConfirmPurchaseUseCase {
+        ConfirmPurchaseUseCase,
+        CancelPurchaseUseCase{
 
     private final PurchaseRepositoryPort purchaseRepositoryPort;
     private final CartRepositoryPort cartRepositoryPort;
     private final SessionContext sessionContext;
     private final PaymentGatewayRegistry gatewayRegistry;
-    private final PaymentStatusUseCaseRegistry paymentStatusUseCaseRegistry;
     private final ProductRepositoryPort productRepositoryPort;
+    private final PurchaseContextFactory contextFactory;
 
     @Override
-    public CheckoutResultResponse checkout(PaymentInput input) {
+    public CheckoutResponse checkout(PaymentInput input) {
         Purchase newPurchase = getCurrentPurchase(input);
         validateStock(newPurchase);
-        PaymentResponse response = chargePurchase(input, newPurchase);
-        PaymentStatusUseCase paymentStatusUseCase = paymentStatusUseCaseRegistry.getHandler(response.getStatus());
-        paymentStatusUseCase.handle(newPurchase);
 
-        return new CheckoutResultResponse(newPurchase, response.getApprovalUrl());
+        PaymentResponse response = chargePurchase(input, newPurchase);
+        purchaseRepositoryPort.save(newPurchase);
+
+        dispatch(contextFactory.of(newPurchase), response);
+
+        return new CheckoutResponse(newPurchase, response.getApprovalUrl());
     }
 
     @Override
     public Purchase confirm(String transactionId) {
-        Purchase purchase = getCurrentPurchase(transactionId);
-        if (!purcharseIsPendingApproval(purchase.getStatus())) throw new IllegalStateException("The purchase is not pending approval");
-        PaymentResponse response = confirmPurchase(purchase, transactionId);
-        PaymentStatusUseCase paymentStatusUseCase = paymentStatusUseCaseRegistry.getHandler(response.getStatus());
-        paymentStatusUseCase.handle(purchase);
+        Purchase purchase = getOwnedByTransaction(transactionId);
+        PurchaseContext ctx = contextFactory.of(purchase);
 
+        if (!ctx.canConfirm()) throw new PurchaseNotPendingException();
+
+        PaymentResponse response = confirmPurchase(purchase, transactionId);
+        dispatch(ctx, response);
+        return purchase;
+    }
+
+    @Override
+    public Purchase cancel(UUID idPurchase) {
+        Purchase purchase = getOwnedById(idPurchase);
+        contextFactory.of(purchase).cancel();
         return purchase;
     }
 
@@ -67,8 +80,7 @@ public class PurchaseService implements
 
     @Override
     public Purchase getById(UUID purchaseId) {
-        return purchaseRepositoryPort.findById(purchaseId)
-                .orElseThrow(() -> new PurchaseNotFoundException(purchaseId));
+        return getOwnedById(purchaseId);
     }
 
     private List<PurchaseItem> buildItems(Cart cart){
@@ -79,26 +91,18 @@ public class PurchaseService implements
                     return new PurchaseItem(
                             product.getId(),
                             product.getName(),
-                            product.getPrice(),
+                            cartItem.getUnitPrice(),
                             cartItem.getQuantity()
                     );
                 }).toList();
     }
 
     private void validateStock(Purchase purchase) {
-        loadAndValidateStock(purchase);
-    }
-
-    private Map<UUID, Product> loadAndValidateStock(Purchase purchase){
-        Map<UUID, Product> productsToDiscount = new HashMap<>();
-        purchase.getItems()
-                .forEach(item -> {
-                    Product product = productRepositoryPort.findProductById(item.idProduct())
-                            .orElseThrow(() -> new ProductNotFoundException(item.idProduct()));
-                    if (product.getStock() < item.quantity()) throw new InsufficientStockException();
-                    productsToDiscount.put(product.getId(), product);
-                });
-        return productsToDiscount;
+        for (PurchaseItem item : purchase.getItems()) {
+            Product product = productRepositoryPort.findProductById(item.idProduct())
+                    .orElseThrow(() -> new ProductNotFoundException(item.idProduct()));
+            if (product.getStock() < item.quantity()) throw new InsufficientStockException();
+        }
     }
 
     private Purchase getCurrentPurchase(PaymentInput input){
@@ -108,11 +112,6 @@ public class PurchaseService implements
 
         return new Purchase(
                 idClient, buildItems(cart), cart.calculateTotal(), input.method());
-    }
-
-    private Purchase getCurrentPurchase(String transactionId){
-        return purchaseRepositoryPort.findByTransactionId(transactionId)
-                .orElseThrow(() -> new PurchaseNotFoundException(transactionId));
     }
 
     private PaymentResponse chargePurchase(PaymentInput input, Purchase purchase){
@@ -125,7 +124,29 @@ public class PurchaseService implements
         return gatewayRegistry.confirm(purchase.getPaymentMethod(), transactionId);
     }
 
-    private boolean purcharseIsPendingApproval(PaymentStatus status){
-        return status == PaymentStatus.PENDING_APPROVAL;
+    private void dispatch(PurchaseContext ctx, PaymentResponse response) {
+        switch (response.getStatus()) {
+            case COMPLETED -> ctx.complete();
+            case FAILED -> ctx.fail(response.getMessage());
+            default -> { }
+        }
+    }
+
+    private Purchase getOwnedByTransaction(String transactionId) {
+        Purchase purchase = purchaseRepositoryPort.findByTransactionId(transactionId)
+                .orElseThrow(() -> new PurchaseNotFoundException(transactionId));
+        if (!purchase.getIdClient().equals(sessionContext.getCurrentUserId())) {
+            throw new PurchaseNotFoundException(transactionId);
+        }
+        return purchase;
+    }
+
+    private Purchase getOwnedById(UUID idPurchase) {
+        Purchase purchase = purchaseRepositoryPort.findById(idPurchase)
+                .orElseThrow(() -> new PurchaseNotFoundException(idPurchase));
+        if (!purchase.getIdClient().equals(sessionContext.getCurrentUserId())) {
+            throw new PurchaseNotFoundException(idPurchase);
+        }
+        return purchase;
     }
 }

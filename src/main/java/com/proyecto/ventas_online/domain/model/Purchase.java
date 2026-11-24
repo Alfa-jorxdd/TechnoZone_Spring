@@ -56,17 +56,7 @@ public class Purchase {
         this.transactionId = transactionId;
     }
 
-    public void markPaid() {
-        if (status != PaymentStatus.PENDING_APPROVAL) {
-            throw new IllegalStateException("Solo una compra pendiente puede pagarse");
-        }
-        this.status = PaymentStatus.COMPLETED;
-    }
-
-    public void markFailed() {
-        if (status != PaymentStatus.PENDING_APPROVAL) {
-            throw new IllegalStateException("Solo una compra pendiente puede fallar");
-        }
-        this.status = PaymentStatus.FAILED;
+    public void changeStatus(PaymentStatus newStatus) {
+        this.status = newStatus;
     }
 }

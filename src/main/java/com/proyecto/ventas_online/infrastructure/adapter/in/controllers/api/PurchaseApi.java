@@ -14,6 +14,7 @@ import java.util.UUID;
 public interface PurchaseApi {
     CheckoutResultResponse checkout(PaymentInput input);
     PurchaseResponse confirm(String transactionId);
+    PurchaseResponse cancel(UUID idPurchase);
     PurchaseResponse findById(UUID idPurchase);
     List<PurchaseResponse> getHistory();
 }

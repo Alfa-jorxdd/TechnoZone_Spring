@@ -1,13 +1,12 @@
 package com.proyecto.ventas_online.infrastructure.config;
 
 import com.proyecto.ventas_online.application.event.DomainEventListener;
-import com.proyecto.ventas_online.application.ports.in.payment.PaymentStatusUseCase;
 import com.proyecto.ventas_online.application.ports.out.*;
 import com.proyecto.ventas_online.application.ports.out.payment.PaymentConfirmationPort;
 import com.proyecto.ventas_online.application.ports.out.payment.PaymentGatewayPort;
 import com.proyecto.ventas_online.application.service.*;
 import com.proyecto.ventas_online.application.service.payment.PaymentGatewayRegistry;
-import com.proyecto.ventas_online.application.service.payment.status.register.PaymentStatusUseCaseRegistry;
+import com.proyecto.ventas_online.application.service.payment.state.PurchaseContextFactory;
 import com.proyecto.ventas_online.domain.factory.DefaultCategoryFactory;
 import com.proyecto.ventas_online.domain.factory.DefaultProductsFactory;
 import com.proyecto.ventas_online.domain.factory.DefaultUserFactory;
@@ -44,6 +43,7 @@ public class ServiceConfiguration {
         return new CartProductDeletedListener(cats);
     }
 
+    @Bean
     public EventBus eventBus(List<DomainEventListener<?>> listeners){
         return new EventBus(listeners);
     }
@@ -76,19 +76,21 @@ public class ServiceConfiguration {
     }
 
     @Bean
-    public PurchaseService purchaseService(PurchaseRepositoryPort purchaseRepositoryPort,
-                                           CartRepositoryPort cartRepositoryPort,
+    public PurchaseService purchaseService(PurchaseRepositoryPort purchases,
+                                           CartRepositoryPort carts,
+                                           ProductRepositoryPort products,
                                            SessionContext sessionContext,
-                                           PaymentGatewayRegistry paymentGatewayRegistry,
-                                           PaymentStatusUseCaseRegistry paymentStatusUseCaseRegistry,
-                                           ProductRepositoryPort productRepositoryPort
-                                           ){
-        return new PurchaseService(purchaseRepositoryPort,
-                cartRepositoryPort,
-                sessionContext,
-                paymentGatewayRegistry,
-                paymentStatusUseCaseRegistry,
-                productRepositoryPort);
+                                           PaymentGatewayRegistry gatewayRegistry,
+                                           PurchaseContextFactory contextFactory) {
+        return new PurchaseService(purchases, carts,sessionContext,
+                gatewayRegistry,products, contextFactory);
+    }
+
+    @Bean
+    public PurchaseContextFactory purchaseContextFactory(PurchaseRepositoryPort purchases,
+                                                         ProductRepositoryPort products,
+                                                         CartRepositoryPort carts) {
+        return new PurchaseContextFactory(purchases, products, carts);
     }
 
     @Bean

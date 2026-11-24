@@ -11,7 +11,7 @@ public class PaymentDialog extends javax.swing.JDialog {
     private final PayWithPaypalPanel paypalPanel;
     
     private final Map<Integer, JPanel> paymentPanels = new HashMap<>();
-    private final List<JPanels> paymentPanelsList;
+    private final List<JPanel> paymentPanelsList;
 
     public PaymentDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
